@@ -21,7 +21,8 @@ public class DbUtils {
         try {
             return DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.exit(1);
         }
+        return null;
     }
 }

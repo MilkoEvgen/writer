@@ -3,9 +3,6 @@ package org.example.util;
 import org.example.controller.LabelController;
 import org.example.controller.PostController;
 import org.example.controller.WriterController;
-import org.example.model.Label;
-import org.example.model.Post;
-import org.example.model.Writer;
 import org.example.repository.*;
 import org.example.service.*;
 import org.example.view.LabelView;
@@ -15,7 +12,7 @@ import org.example.view.WriterView;
 
 import java.util.Scanner;
 
-public class StartClass {
+public class ApplicationContext {
     private final Scanner scanner;
     private final View writerView;
     private final View postView;
@@ -28,7 +25,7 @@ public class StartClass {
             "3) Label\n" +
             "4) Quit";
 
-    public StartClass() {
+    public ApplicationContext() {
         this.scanner = new Scanner(System.in);
 
         LabelRepository labelRepository = new LabelRepositoryImpl();

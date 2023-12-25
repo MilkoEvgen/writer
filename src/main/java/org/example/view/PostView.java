@@ -13,7 +13,6 @@ public class PostView extends View{
     private final PostController postController;
     private final String ENTER_CONTENT = "Enter content:";
     private final String ENTER_ID = "Enter post id:";
-    private final String NOT_EXIST = "Post does not exist";
 
     public PostView(Scanner scanner, PostController postController) {
         super(scanner);
@@ -48,7 +47,7 @@ public class PostView extends View{
 
     protected void getById(){
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Getting post by id...");
         try {
             Post post = postController.getById(id);
@@ -73,7 +72,7 @@ public class PostView extends View{
                 break;
             case 2:
                 System.out.println("Enter author id:");
-                int authorId = scanner.nextInt();
+                Integer authorId = scanner.nextInt();
                 System.out.println("Getting all posts by author id...");
                 posts = postController.getAllByAuthorId(authorId);
                 for (Post post : posts) {
@@ -84,7 +83,7 @@ public class PostView extends View{
     }
 
     protected void update(){
-        int postId;
+        Integer postId;
         Post post;
         System.out.println("1) Update post content\n" +
                 "2) Update post status");
@@ -110,7 +109,7 @@ public class PostView extends View{
                         "1) ACTIVE\n" +
                         "2) UNDER_REVIEW\n" +
                         "3) DELETED");
-                int statusId = scanner.nextInt();
+                Integer statusId = scanner.nextInt();
                 System.out.println("Updating post status...");
                 try {
                     post = postController.updateStatus(postId, statusId);
@@ -124,7 +123,7 @@ public class PostView extends View{
 
     protected void delete(){
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Deleting post...");
         try {
             if (postController.delete(id)){

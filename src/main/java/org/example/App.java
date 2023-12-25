@@ -1,12 +1,12 @@
 package org.example;
 
-import org.example.util.StartClass;
+import org.example.util.ApplicationContext;
 
 public class App 
 {
     public static void main( String[] args )
     {
-        StartClass startClass = new StartClass();
-        startClass.start();
+        ApplicationContext applicationContext = new ApplicationContext();
+        applicationContext.start();
     }
 }

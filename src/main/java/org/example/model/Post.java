@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Post {
-    private int id;
+    private Integer id;
     private String content;
     private LocalDateTime created;
     private LocalDateTime updated;
@@ -13,11 +13,11 @@ public class Post {
     private Integer authorId;
     private PostStatus postStatus;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

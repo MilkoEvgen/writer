@@ -12,7 +12,6 @@ public class WriterView extends View{
     private final String ENTER_FIRSTNAME = "Enter first name:";
     private final String ENTER_LASTNAME = "Enter last name:";
     private final String ENTER_ID = "Enter writer id:";
-    private final String NOT_EXIST = "Writer does not exist";
 
     public WriterView(Scanner scanner, WriterController writerController) {
         super(scanner);
@@ -38,7 +37,7 @@ public class WriterView extends View{
 
     protected void getById() {
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Getting writer by id...");
         try {
             Writer writer = writerController.getById(id);
@@ -78,7 +77,7 @@ public class WriterView extends View{
 
     protected void delete() {
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Deleting writer...");
         try {
             if (writerController.delete(id)){

@@ -12,8 +12,6 @@ public class LabelView extends View {
     private final String ENTER_NAME = "Enter name:";
     private final String ENTER_ID = "Enter label id:";
 
-    private final String NOT_EXIST = "Label does not exist";
-
     public LabelView(Scanner scanner, LabelController labelController) {
         super(scanner);
         this.labelController = labelController;
@@ -40,7 +38,7 @@ public class LabelView extends View {
 
     protected void getById(){
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Getting label by id...");
         try {
             Label label = labelController.getById(id);
@@ -75,7 +73,7 @@ public class LabelView extends View {
 
     protected void delete(){
         System.out.println(ENTER_ID);
-        int id = scanner.nextInt();
+        Integer id = scanner.nextInt();
         System.out.println("Deleting label...");
         try {
             if (labelController.delete(id)){
