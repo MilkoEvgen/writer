@@ -3,6 +3,7 @@ package org.example;
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Label;
 import org.example.model.Post;
+import org.example.model.Writer;
 import org.example.repository.LabelRepository;
 import org.example.repository.PostRepository;
 import org.example.repository.WriterRepository;
@@ -34,6 +35,8 @@ public class PostServiceTest {
 
     private Label label;
 
+    private Writer author;
+
     private Post post;
 
     @BeforeEach
@@ -46,7 +49,9 @@ public class PostServiceTest {
         post.setContent("content");
         post.setCreated(LocalDateTime.of(2000, 12, 11, 10, 30));
         post.setLabels(List.of(label));
-        post.setAuthorId(1);
+        author = new Writer();
+        author.setId(1);
+        post.setAuthor(author);
     }
 
     @Test
@@ -62,7 +67,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getLabels().size());
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.getAuthorId());
+        Assertions.assertEquals(1, actual.getAuthor().getId());
         Mockito.verify(writerRepository).existsById(1);
         Mockito.verify(labelRepository).existsById(1);
         Mockito.verify(postRepository).create(any());
@@ -100,7 +105,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getLabels().size());
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.getAuthorId());
+        Assertions.assertEquals(1, actual.getAuthor().getId());
         Mockito.verify(postRepository).existsById(1);
         Mockito.verify(postRepository).getById(1);
     }
@@ -126,7 +131,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.get(0).getLabels().size());
         Assertions.assertEquals(1, actual.get(0).getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.get(0).getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.get(0).getAuthorId());
+        Assertions.assertEquals(1, actual.get(0).getAuthor().getId());
         Mockito.verify(postRepository).getAll();
         Mockito.verify(labelRepository).getLabelsByPostId(1);
     }
@@ -151,7 +156,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.get(0).getLabels().size());
         Assertions.assertEquals(1, actual.get(0).getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.get(0).getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.get(0).getAuthorId());
+        Assertions.assertEquals(1, actual.get(0).getAuthor().getId());
         Mockito.verify(writerRepository).existsById(1);
         Mockito.verify(postRepository).getAllByAuthorId(1);
         Mockito.verify(labelRepository).getLabelsByPostId(1);
@@ -189,7 +194,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getLabels().size());
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.getAuthorId());
+        Assertions.assertEquals(1, actual.getAuthor().getId());
         Mockito.verify(postRepository).existsById(1);
         Mockito.verify(postRepository).update(any());
     }
@@ -216,7 +221,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getLabels().size());
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.getAuthorId());
+        Assertions.assertEquals(1, actual.getAuthor().getId());
         Mockito.verify(postRepository).existsById(1);
         Mockito.verify(postRepository).updateStatus(any());
     }

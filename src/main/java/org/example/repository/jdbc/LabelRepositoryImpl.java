@@ -1,6 +1,7 @@
-package org.example.repository;
+package org.example.repository.jdbc;
 
 import org.example.model.Label;
+import org.example.repository.LabelRepository;
 import org.example.util.DbUtils;
 
 import java.sql.*;
@@ -11,8 +12,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public Label create(Label label) {
         String SQL = "INSERT INTO labels (name) VALUES (?)";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setString(1, label.getName());
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -34,14 +34,11 @@ public class LabelRepositoryImpl implements LabelRepository {
     public Label getById(Integer id) {
         Label label = null;
         String SQL = "SELECT * FROM labels WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                label = new Label();
-                label.setId(resultSet.getInt("id"));
-                label.setName(resultSet.getString("name"));
+                label = getLabelFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -53,13 +50,10 @@ public class LabelRepositoryImpl implements LabelRepository {
     public List<Label> getAll() {
         List<Label> labels = new ArrayList<>();
         String SQL = "SELECT * FROM labels";
-        try (Connection connection = DbUtils.getConnection();
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = DbUtils.getStatement(SQL)) {
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
-                Label label = new Label();
-                label.setId(resultSet.getInt("id"));
-                label.setName(resultSet.getString("name"));
+                Label label =getLabelFromResultSet(resultSet);
                 labels.add(label);
             }
         } catch (SQLException e) {
@@ -71,9 +65,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public Label update(Label label) {
         String SQL = "UPDATE labels SET name = ? WHERE id = ?";
-
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setString(1, label.getName());
             statement.setInt(2, label.getId());
             int affectedRows = statement.executeUpdate();
@@ -90,8 +82,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public boolean delete(Integer id) {
         String SQL = "DELETE FROM labels WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -107,8 +98,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public boolean existsById(Integer id) {
         String SQL = "SELECT * FROM labels WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
@@ -123,14 +113,11 @@ public class LabelRepositoryImpl implements LabelRepository {
         String SQL = "SELECT * FROM labels l " +
                 "INNER JOIN post_label p ON l.id = p.label_id " +
                 "WHERE p.post_id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, postId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Label label = new Label();
-                label.setId(resultSet.getInt("id"));
-                label.setName(resultSet.getString("name"));
+                Label label = getLabelFromResultSet(resultSet);
                 labels.add(label);
             }
         } catch (SQLException e) {
@@ -142,8 +129,7 @@ public class LabelRepositoryImpl implements LabelRepository {
     @Override
     public void addPostLabel(Integer postId, List<Integer> labelsId) {
         String SQL = "INSERT INTO post_label (post_id, label_id) VALUES (?, ?)";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             for (Integer labelId : labelsId) {
                 statement.setInt(1, postId);
                 statement.setInt(2, labelId);
@@ -152,5 +138,12 @@ public class LabelRepositoryImpl implements LabelRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Label getLabelFromResultSet(ResultSet resultSet) throws SQLException {
+        Label label = new Label();
+        label.setId(resultSet.getInt("id"));
+        label.setName(resultSet.getString("name"));
+        return label;
     }
 }

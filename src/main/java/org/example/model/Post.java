@@ -1,6 +1,5 @@
 package org.example.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class Post {
     private LocalDateTime created;
     private LocalDateTime updated;
     private List<Label> labels;
-    private Integer authorId;
+    private Writer author;
     private PostStatus postStatus;
 
     public Integer getId() {
@@ -53,12 +52,12 @@ public class Post {
         this.labels = labels;
     }
 
-    public Integer getAuthorId() {
-        return authorId;
+    public Writer getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(Integer authorId) {
-        this.authorId = authorId;
+    public void setAuthor(Writer author) {
+        this.author = author;
     }
 
     public PostStatus getPostStatus() {
@@ -77,8 +76,11 @@ public class Post {
                 ", created=" + created +
                 ", updated=" + updated +
                 ", labels=" + labels +
-                ", authorId=" + authorId +
-                ", postStatus=" + postStatus +
+                ", author={" +
+                "id=" + author.getId() +
+                ", first name=" + author.getFirstName() +
+                ", last name=" + author.getLastName() +
+                "}, postStatus=" + postStatus +
                 '}';
     }
 }

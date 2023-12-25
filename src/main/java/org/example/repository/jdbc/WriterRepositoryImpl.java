@@ -1,9 +1,10 @@
-package org.example.repository;
+package org.example.repository.jdbc;
 
 import org.example.model.Label;
 import org.example.model.Post;
 import org.example.model.PostStatus;
 import org.example.model.Writer;
+import org.example.repository.WriterRepository;
 import org.example.util.DbUtils;
 
 import java.sql.*;
@@ -16,8 +17,7 @@ public class WriterRepositoryImpl implements WriterRepository {
     @Override
     public Writer create(Writer writer) {
         String SQL = "INSERT INTO writers (first_name, last_name) VALUES (?, ?)";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setString(1, writer.getFirstName());
             statement.setString(2, writer.getLastName());
             int affectedRows = statement.executeUpdate();
@@ -44,8 +44,7 @@ public class WriterRepositoryImpl implements WriterRepository {
                 "FROM writers " +
                 "LEFT JOIN posts ON writers.id = posts.author_id " +
                 "WHERE writers.id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -53,8 +52,8 @@ public class WriterRepositoryImpl implements WriterRepository {
                     writer = getWriterFromResultSet(resultSet);
                 }
                 Post post = getPostFromResultSet(resultSet);
-                if (post != null){
-                    post.setLabels(getLabelsByPostId(connection, post.getId()));
+                if (post != null) {
+                    post.setLabels(getLabelsByPostId(post.getId()));
                     posts.add(post);
                     writer.setPosts(posts);
                 }
@@ -69,8 +68,7 @@ public class WriterRepositoryImpl implements WriterRepository {
     public List<Writer> getAll() {
         List<Writer> writers = new ArrayList<>();
         String SQL = "SELECT * FROM writers";
-        try (Connection connection = DbUtils.getConnection();
-             Statement statement = connection.createStatement()) {
+        try (Statement statement = DbUtils.getStatement(SQL)) {
             ResultSet resultSet = statement.executeQuery(SQL);
             while (resultSet.next()) {
                 Writer writer = getWriterFromResultSet(resultSet);
@@ -84,9 +82,8 @@ public class WriterRepositoryImpl implements WriterRepository {
 
     @Override
     public Writer update(Writer writer) {
-        String SQL = "UPDATE writers SET first_name = ?, last_name - ? WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        String SQL = "UPDATE writers SET first_name = ?, last_name = ? WHERE id = ?";
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setString(1, writer.getFirstName());
             statement.setString(2, writer.getLastName());
             statement.setInt(3, writer.getId());
@@ -109,8 +106,7 @@ public class WriterRepositoryImpl implements WriterRepository {
     @Override
     public boolean delete(Integer id) {
         String SQL = "DELETE FROM writers WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             int affectedRows = statement.executeUpdate();
             if (affectedRows > 0) {
@@ -126,8 +122,7 @@ public class WriterRepositoryImpl implements WriterRepository {
     @Override
     public boolean existsById(Integer id) {
         String SQL = "SELECT * FROM writers WHERE id = ?";
-        try (Connection connection = DbUtils.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             return resultSet.next();
@@ -147,7 +142,7 @@ public class WriterRepositoryImpl implements WriterRepository {
     private Post getPostFromResultSet(ResultSet resultSet) throws SQLException {
         Post post = new Post();
         int id = resultSet.getInt(4);
-        if (id > 0){
+        if (id > 0) {
             post.setId(id);
             post.setContent(resultSet.getString("content"));
             LocalDateTime created = resultSet.getTimestamp("created").toLocalDateTime();
@@ -155,25 +150,25 @@ public class WriterRepositoryImpl implements WriterRepository {
             Timestamp timestamp = resultSet.getTimestamp("updated");
             LocalDateTime updated = timestamp != null ? timestamp.toLocalDateTime() : null;
             post.setUpdated(updated);
-            post.setAuthorId(resultSet.getInt("author_id"));
             post.setPostStatus(PostStatus.fromValue(resultSet.getInt("status_id")));
             return post;
         }
         return null;
     }
 
-    private List<Label> getLabelsByPostId(Connection connection, int postId) {
+    private List<Label> getLabelsByPostId(int postId) {
         List<Label> labels = new ArrayList<>();
         String SQL = "SELECT * FROM labels l " +
                 "INNER JOIN post_label p ON l.id = p.label_id " +
                 "WHERE p.post_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(SQL)) {
+        try (PreparedStatement statement = DbUtils.getPreparedStatement(SQL)) {
             statement.setInt(1, postId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Label label = new Label();
                 label.setId(resultSet.getInt("id"));
                 label.setName(resultSet.getString("name"));
+                System.out.println("Получили label " + label + "\n");
                 labels.add(label);
             }
         } catch (SQLException e) {

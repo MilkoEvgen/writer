@@ -45,7 +45,12 @@ public class Writer {
     public String toString() {
         String postsAsString = posts != null
                 ? posts.stream()
-                .map(Post::toString)
+                .map(post -> "{id=" + post.getId() +
+                        ", content=" + post.getContent() +
+                        ", created=" + post.getCreated() +
+                        ", updated=" + post.getUpdated() +
+                        ", labels=" + post.getLabels() +
+                        ", status=" + post.getPostStatus() + "}")
                 .collect(Collectors.joining("\n"))
                 : "[]";
 
@@ -56,5 +61,6 @@ public class Writer {
                 ", posts=\n" + postsAsString +
                 ')';
     }
+
 
 }

@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService{
         }
         Post post = new Post();
         post.setContent(content);
-        post.setAuthorId(authorId);
+        post.setAuthor(writerRepository.getById(authorId));
         post.setCreated(LocalDateTime.now());
         post = postRepository.create(post);
         labelRepository.addPostLabel(post.getId(), labelId);

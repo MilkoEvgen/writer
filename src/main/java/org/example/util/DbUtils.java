@@ -1,8 +1,6 @@
 package org.example.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DbUtils {
     private static final String URL = "jdbc:mysql://31.31.196.252:3306/u1317084_journal";
@@ -24,5 +22,17 @@ public class DbUtils {
             System.exit(1);
         }
         return null;
+    }
+
+    public static Statement getStatement(String sql) {
+        try {
+            return getConnection().createStatement();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        return getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
     }
 }
