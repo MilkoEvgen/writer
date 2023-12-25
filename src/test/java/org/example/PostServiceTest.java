@@ -7,7 +7,7 @@ import org.example.model.Writer;
 import org.example.repository.LabelRepository;
 import org.example.repository.PostRepository;
 import org.example.repository.WriterRepository;
-import org.example.service.PostServiceImpl;
+import org.example.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

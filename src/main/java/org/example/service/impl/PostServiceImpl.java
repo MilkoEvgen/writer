@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.service.impl;
 
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Post;
@@ -6,11 +6,12 @@ import org.example.model.PostStatus;
 import org.example.repository.LabelRepository;
 import org.example.repository.PostRepository;
 import org.example.repository.WriterRepository;
+import org.example.service.PostService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
     private final WriterRepository writerRepository;
     private final LabelRepository labelRepository;

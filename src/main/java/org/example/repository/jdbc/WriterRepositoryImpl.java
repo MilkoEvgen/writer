@@ -168,7 +168,6 @@ public class WriterRepositoryImpl implements WriterRepository {
                 Label label = new Label();
                 label.setId(resultSet.getInt("id"));
                 label.setName(resultSet.getString("name"));
-                System.out.println("Получили label " + label + "\n");
                 labels.add(label);
             }
         } catch (SQLException e) {

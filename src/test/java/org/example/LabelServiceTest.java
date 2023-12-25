@@ -4,7 +4,7 @@ import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Label;
 import org.example.repository.LabelRepository;
 import org.example.service.LabelService;
-import org.example.service.LabelServiceImpl;
+import org.example.service.impl.LabelServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

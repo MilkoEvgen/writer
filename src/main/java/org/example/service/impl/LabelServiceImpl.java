@@ -1,12 +1,13 @@
-package org.example.service;
+package org.example.service.impl;
 
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Label;
 import org.example.repository.LabelRepository;
+import org.example.service.LabelService;
 
 import java.util.List;
 
-public class LabelServiceImpl implements LabelService{
+public class LabelServiceImpl implements LabelService {
     private final LabelRepository labelRepository;
 
     public LabelServiceImpl(LabelRepository labelRepository) {

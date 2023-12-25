@@ -1,12 +1,13 @@
-package org.example.service;
+package org.example.service.impl;
 
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Writer;
 import org.example.repository.WriterRepository;
+import org.example.service.WriterService;
 
 import java.util.List;
 
-public class WriterServiceImpl implements WriterService{
+public class WriterServiceImpl implements WriterService {
     private final WriterRepository writerRepository;
 
     public WriterServiceImpl(WriterRepository writerRepository) {

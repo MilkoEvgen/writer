@@ -8,20 +8,18 @@ public class DbUtils {
     private static final String PASSWORD = "u1317084_milko";
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
+    private static Connection connection;
+
     public static Connection getConnection() {
-
-        try {
-            Class.forName(JDBC_DRIVER);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        if (connection == null){
+            try {
+                Class.forName(JDBC_DRIVER);
+                connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            } catch (SQLException | ClassNotFoundException e) {
+                System.exit(1);
+            }
         }
-
-        try {
-            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (SQLException e) {
-            System.exit(1);
-        }
-        return null;
+        return connection;
     }
 
     public static Statement getStatement(String sql) {
