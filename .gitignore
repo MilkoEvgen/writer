@@ -1,0 +1,9 @@
+*~
+*.swp
+.DS_Store
+Thumbs.db
+target/
+.idea/
+/.m2/
+/lib/
+*.log

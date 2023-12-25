@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="create-table-post-status" author="Eugene_Milko">
+        <createTable tableName="post_status">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="status" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="insert-into-post-status" author="Eugene_Milko">
+        <insert tableName="post_status">
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="post_status">
+            <column name="status" value="UNDER_REVIEW"/>
+        </insert>
+        <insert tableName="post_status">
+            <column name="status" value="DELETED"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
