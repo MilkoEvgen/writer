@@ -54,6 +54,7 @@ public class PostServiceTest {
         Mockito.when(writerRepository.existsById(1)).thenReturn(true);
         Mockito.when(labelRepository.existsById(1)).thenReturn(true);
         Mockito.when(postRepository.create(any())).thenReturn(post);
+        Mockito.when(labelRepository.getLabelsByPostId(1)).thenReturn(List.of(label));
         Post actual = postService.create("content", 1, List.of(1));
         Assertions.assertEquals(1, actual.getId());
         Assertions.assertEquals("content", actual.getContent());
