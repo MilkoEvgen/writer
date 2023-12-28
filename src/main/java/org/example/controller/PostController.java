@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import org.example.model.Post;
+import org.example.model.PostStatus;
 import org.example.service.PostService;
 
 import java.util.List;
@@ -28,12 +29,8 @@ public class PostController {
         return postService.getAllByAuthorId(authorId);
     }
 
-    public Post update(Integer id, String content){
-        return postService.update(id, content);
-    }
-
-    public Post updateStatus(Integer postId, Integer statusId){
-        return postService.updateStatus(postId, statusId);
+    public Post update(Integer id, String content, PostStatus status){
+        return postService.update(id, content, status);
     }
 
     public boolean delete(Integer id){

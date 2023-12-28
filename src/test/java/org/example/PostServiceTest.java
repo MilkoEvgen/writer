@@ -3,6 +3,7 @@ package org.example;
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Label;
 import org.example.model.Post;
+import org.example.model.PostStatus;
 import org.example.model.Writer;
 import org.example.repository.LabelRepository;
 import org.example.repository.PostRepository;
@@ -59,7 +60,6 @@ public class PostServiceTest {
         Mockito.when(writerRepository.existsById(1)).thenReturn(true);
         Mockito.when(labelRepository.existsById(1)).thenReturn(true);
         Mockito.when(postRepository.create(any())).thenReturn(post);
-        Mockito.when(labelRepository.getLabelsByPostId(1)).thenReturn(List.of(label));
         Post actual = postService.create("content", 1, List.of(1));
         Assertions.assertEquals(1, actual.getId());
         Assertions.assertEquals("content", actual.getContent());
@@ -71,7 +71,7 @@ public class PostServiceTest {
         Mockito.verify(writerRepository).existsById(1);
         Mockito.verify(labelRepository).existsById(1);
         Mockito.verify(postRepository).create(any());
-        Mockito.verify(labelRepository).addPostLabel(1, List.of(1));
+
     }
 
     @Test
@@ -102,6 +102,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getId());
         Assertions.assertEquals("content", actual.getContent());
         Assertions.assertEquals(LocalDateTime.of(2000, 12, 11, 10, 30), actual.getCreated());
+        Assertions.assertNull(actual.getUpdated());
         Assertions.assertEquals(1, actual.getLabels().size());
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
@@ -122,7 +123,6 @@ public class PostServiceTest {
     @Test
     public void getAllShouldReturnListOfPosts(){
         Mockito.when(postRepository.getAll()).thenReturn(List.of(post));
-        Mockito.when(labelRepository.getLabelsByPostId(1)).thenReturn(List.of(label));
         List<Post> actual = postService.getAll();
         Assertions.assertEquals(1, actual.size());
         Assertions.assertEquals(1, actual.get(0).getId());
@@ -133,7 +133,6 @@ public class PostServiceTest {
         Assertions.assertEquals("label", actual.get(0).getLabels().get(0).getName());
         Assertions.assertEquals(1, actual.get(0).getAuthor().getId());
         Mockito.verify(postRepository).getAll();
-        Mockito.verify(labelRepository).getLabelsByPostId(1);
     }
 
     @Test
@@ -147,19 +146,18 @@ public class PostServiceTest {
     public void getAllByAuthorIdShouldReturnListOfPosts(){
         Mockito.when(writerRepository.existsById(1)).thenReturn(true);
         Mockito.when(postRepository.getAllByAuthorId(1)).thenReturn(List.of(post));
-        Mockito.when(labelRepository.getLabelsByPostId(1)).thenReturn(List.of(label));
         List<Post> actual = postService.getAllByAuthorId(1);
         Assertions.assertEquals(1, actual.size());
         Assertions.assertEquals(1, actual.get(0).getId());
         Assertions.assertEquals("content", actual.get(0).getContent());
         Assertions.assertEquals(LocalDateTime.of(2000, 12, 11, 10, 30), actual.get(0).getCreated());
+        Assertions.assertNull(actual.get(0).getUpdated());
         Assertions.assertEquals(1, actual.get(0).getLabels().size());
         Assertions.assertEquals(1, actual.get(0).getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.get(0).getLabels().get(0).getName());
         Assertions.assertEquals(1, actual.get(0).getAuthor().getId());
         Mockito.verify(writerRepository).existsById(1);
         Mockito.verify(postRepository).getAllByAuthorId(1);
-        Mockito.verify(labelRepository).getLabelsByPostId(1);
     }
 
     @Test
@@ -186,7 +184,8 @@ public class PostServiceTest {
         Mockito.when(postRepository.existsById(1)).thenReturn(true);
         Mockito.when(postRepository.update(any())).thenReturn(post);
         post.setUpdated(LocalDateTime.of(2020, 12, 11, 10, 30));
-        Post actual = postService.update(1, "content");
+        post.setPostStatus(PostStatus.ACTIVE);
+        Post actual = postService.update(1, "content", PostStatus.ACTIVE);
         Assertions.assertEquals(1, actual.getId());
         Assertions.assertEquals("content", actual.getContent());
         Assertions.assertEquals(LocalDateTime.of(2000, 12, 11, 10, 30), actual.getCreated());
@@ -195,6 +194,7 @@ public class PostServiceTest {
         Assertions.assertEquals(1, actual.getLabels().get(0).getId());
         Assertions.assertEquals("label", actual.getLabels().get(0).getName());
         Assertions.assertEquals(1, actual.getAuthor().getId());
+        Assertions.assertEquals(PostStatus.ACTIVE, actual.getPostStatus());
         Mockito.verify(postRepository).existsById(1);
         Mockito.verify(postRepository).update(any());
     }
@@ -203,34 +203,7 @@ public class PostServiceTest {
     public void updateShouldThrowEntityNotFoundExceptionIfPostNotExists(){
         Mockito.when(postRepository.existsById(1)).thenReturn(false);
         EntityNotFoundException e = Assertions.assertThrows(EntityNotFoundException.class,
-                () -> postService.update(1, "content"));
-        Assertions.assertEquals("Post not exists", e.getMessage());
-        Mockito.verify(postRepository).existsById(1);
-    }
-
-    @Test
-    public void updateStatusShouldReturnPost(){
-        post.setUpdated(LocalDateTime.of(2020, 12, 11, 10, 30));
-        Mockito.when(postRepository.existsById(1)).thenReturn(true);
-        Mockito.when(postRepository.updateStatus(any())).thenReturn(post);
-        Post actual = postService.updateStatus(1, 1);
-        Assertions.assertEquals(1, actual.getId());
-        Assertions.assertEquals("content", actual.getContent());
-        Assertions.assertEquals(LocalDateTime.of(2000, 12, 11, 10, 30), actual.getCreated());
-        Assertions.assertEquals(LocalDateTime.of(2020, 12, 11, 10, 30), actual.getUpdated());
-        Assertions.assertEquals(1, actual.getLabels().size());
-        Assertions.assertEquals(1, actual.getLabels().get(0).getId());
-        Assertions.assertEquals("label", actual.getLabels().get(0).getName());
-        Assertions.assertEquals(1, actual.getAuthor().getId());
-        Mockito.verify(postRepository).existsById(1);
-        Mockito.verify(postRepository).updateStatus(any());
-    }
-
-    @Test
-    public void updateStatusShouldThrowEntityNotFoundExceptionIfPostNotExists(){
-        Mockito.when(postRepository.existsById(1)).thenReturn(false);
-        EntityNotFoundException e = Assertions.assertThrows(EntityNotFoundException.class,
-                () -> postService.updateStatus(1, 1));
+                () -> postService.update(1, "content", PostStatus.ACTIVE));
         Assertions.assertEquals("Post not exists", e.getMessage());
         Mockito.verify(postRepository).existsById(1);
     }

@@ -1,12 +1,21 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Entity
+@Table(name = "writers")
 public class Writer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(name = "first_name")
     private String  firstName;
+    @Column(name = "last_name")
     private String  lastName;
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Post> posts;
 
     public Integer getId() {

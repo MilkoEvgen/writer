@@ -11,19 +11,29 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <liquibase.version>4.25.0</liquibase.version>
+    <hibernate.version>6.4.1.Final</hibernate.version>
+    <flyway.version>10.4.1</flyway.version>
     <mysql.version>8.2.0</mysql.version>
     <junit.version>5.10.1</junit.version>
     <mockito.version>5.8.0</mockito.version>
+    <flyway_plugin.version>10.4.1</flyway_plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
+
     <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
-      <version>${liquibase.version}</version>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${hibernate.version}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-mysql</artifactId>
+      <version>${flyway.version}</version>
+    </dependency>
+
 
     <dependency>
       <groupId>com.mysql</groupId>
@@ -44,7 +54,6 @@
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
-
 
   </dependencies>
   <build>
@@ -79,22 +88,20 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.liquibase</groupId>
-        <artifactId>liquibase-maven-plugin</artifactId>
-        <version>4.25.0</version>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>${flyway_plugin.version}</version>
         <configuration>
-          <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+          <url>jdbc:mysql://31.31.196.252:3306/u1317084_journal</url>
+          <user>u1317084_milko</user>
+          <password>u1317084_milko</password>
+          <cleanDisabled>false</cleanDisabled>
+          <locations>
+            <location>filesystem:src/main/resources/db/migration</location>
+          </locations>
         </configuration>
-        <executions>
-          <execution>
-            <id>update</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>update</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
+
     </plugins>
   </build>
 </project>

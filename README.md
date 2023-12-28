@@ -7,17 +7,16 @@
 - **Label** (id, name)
 - **PostStatus** (enum ACTIVE, UNDER_REVIEW, DELETED)
 ### Требования:
-1. Придерживаться шаблона MVC (пакеты model, repository, service, controller, view)
-2. Для миграции БД использовать https://www.liquibase.org/
-3. Сервисный слой приложения должен быть покрыт юнит тестами (junit + mockito).
-4. Слои:
-   - model - POJO клаcсы
-   - repository - классы, реализующие доступ к БД
-   - controller - обработка запросов от пользователя
-   - view - все данные, необходимые для работы с консолью
-5. Для импорта библиотек использовать Maven
+1. Все CRUD операции для каждой из сущностей
+2. Придерживаться подхода MVC
+3. Для сборки проекта использовать Maven
+4. Для взаимодействия с БД - Hibernate
+5. Для конфигурирования Hibernate - аннотации
+6. Инициализация БД должна быт реализована с помощью flyway
+7. Сервисный слой приложения должен быть покрыт юнит тестами (junit + mockito).
 
-**Технологии**: Java, MySQL, JDBC, Maven, Liquibase, JUnit, Mockito
+
+**Технологии**: Java, PostgreSQL, Hibernate, Flyway, Maven
 ___
 ### Инструкция по запуску проекта:
 1. Установить Java и Maven

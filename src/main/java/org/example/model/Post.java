@@ -1,15 +1,35 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Entity
+@Table(name = "posts")
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String content;
+    @Column(name = "created", updatable = false)
+    @CreationTimestamp
     private LocalDateTime created;
+    @Column(name = "updated")
     private LocalDateTime updated;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "post_label",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "label_id"))
     private List<Label> labels;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id")
     private Writer author;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private PostStatus postStatus;
 
     public Integer getId() {

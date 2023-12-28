@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import org.example.exceptions.EntityNotFoundException;
+import org.example.model.Label;
 import org.example.model.Post;
 import org.example.model.PostStatus;
 import org.example.repository.LabelRepository;
@@ -9,6 +10,7 @@ import org.example.repository.WriterRepository;
 import org.example.service.PostService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostServiceImpl implements PostService {
@@ -26,18 +28,21 @@ public class PostServiceImpl implements PostService {
         if (!writerRepository.existsById(authorId)){
             throw new EntityNotFoundException("Author not exists");
         }
+        List<Label> labels = new ArrayList<>();
         for (Integer id : labelId) {
             if (!labelRepository.existsById(id)){
                 throw new EntityNotFoundException("Label not exists");
+            } else {
+                labels.add(labelRepository.getById(id));
             }
         }
         Post post = new Post();
         post.setContent(content);
         post.setAuthor(writerRepository.getById(authorId));
         post.setCreated(LocalDateTime.now());
+        post.setLabels(labels);
+        post.setPostStatus(PostStatus.UNDER_REVIEW);
         post = postRepository.create(post);
-        labelRepository.addPostLabel(post.getId(), labelId);
-        post.setLabels(labelRepository.getLabelsByPostId(post.getId()));
         return post;
     }
 
@@ -52,9 +57,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getAll() {
         List<Post> posts = postRepository.getAll();
-        for (Post post : posts) {
-            post.setLabels(labelRepository.getLabelsByPostId(post.getId()));
-        }
         return posts;
     }
 
@@ -63,15 +65,11 @@ public class PostServiceImpl implements PostService {
         if (!writerRepository.existsById(authorId)){
             throw new EntityNotFoundException("Author not exists");
         }
-        List<Post> posts = postRepository.getAllByAuthorId(authorId);
-        for (Post post : posts) {
-            post.setLabels(labelRepository.getLabelsByPostId(post.getId()));
-        }
-        return posts;
+        return postRepository.getAllByAuthorId(authorId);
     }
 
     @Override
-    public Post update(Integer id, String content) {
+    public Post update(Integer id, String content, PostStatus status) {
         if (!postRepository.existsById(id)){
             throw new EntityNotFoundException("Post not exists");
         }
@@ -79,19 +77,8 @@ public class PostServiceImpl implements PostService {
         post.setId(id);
         post.setContent(content);
         post.setUpdated(LocalDateTime.now());
+        post.setPostStatus(status);
         return postRepository.update(post);
-    }
-
-    @Override
-    public Post updateStatus(Integer postId, Integer statusId) {
-        if (!postRepository.existsById(postId)){
-            throw new EntityNotFoundException("Post not exists");
-        }
-        Post post = new Post();
-        post.setId(postId);
-        post.setPostStatus(PostStatus.fromValue(statusId));
-        post.setUpdated(LocalDateTime.now());
-        return postRepository.updateStatus(post);
     }
 
     @Override

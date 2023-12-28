@@ -3,13 +3,14 @@ package org.example.view;
 import org.example.controller.PostController;
 import org.example.exceptions.EntityNotFoundException;
 import org.example.model.Post;
+import org.example.model.PostStatus;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class PostView extends View{
+public class PostView extends View {
     private final PostController postController;
     private final String ENTER_CONTENT = "Enter content:";
     private final String ENTER_ID = "Enter post id:";
@@ -25,7 +26,7 @@ public class PostView extends View{
                 "5) Delete post";
     }
 
-    protected void create(){
+    protected void create() {
         scanner.nextLine();
         System.out.println(ENTER_CONTENT);
         String content = scanner.nextLine();
@@ -40,29 +41,29 @@ public class PostView extends View{
         try {
             Post post = postController.create(content, authorId, labels);
             System.out.println(post);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    protected void getById(){
+    protected void getById() {
         System.out.println(ENTER_ID);
         Integer id = scanner.nextInt();
         System.out.println("Getting post by id...");
         try {
             Post post = postController.getById(id);
             System.out.println(post);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    protected void getAll(){
+    protected void getAll() {
         System.out.println("Choose action:\n" +
                 "1) Get all posts\n" +
                 "2) Get all posts by author id");
         List<Post> posts;
-        switch (scanner.nextInt()){
+        switch (scanner.nextInt()) {
             case 1:
                 System.out.println("Getting all posts...");
                 posts = postController.getAll();
@@ -82,54 +83,50 @@ public class PostView extends View{
         }
     }
 
-    protected void update(){
-        Integer postId;
-        Post post;
-        System.out.println("1) Update post content\n" +
-                "2) Update post status");
-        switch (scanner.nextInt()){
-            case 1:
-                System.out.println(ENTER_ID);
-                postId = scanner.nextInt();
-                scanner.nextLine();
-                System.out.println(ENTER_CONTENT);
-                String content = scanner.nextLine();
-                System.out.println("Updating post...");
-                try {
-                    post = postController.update(postId, content);
-                    System.out.println(post);
-                } catch (EntityNotFoundException e){
-                    System.out.println(e.getMessage());
-                }
-                break;
-            case 2:
-                System.out.println(ENTER_ID);
-                postId = scanner.nextInt();
-                System.out.println("Enter post status id:\n" +
-                        "1) ACTIVE\n" +
-                        "2) UNDER_REVIEW\n" +
-                        "3) DELETED");
-                Integer statusId = scanner.nextInt();
-                System.out.println("Updating post status...");
-                try {
-                    post = postController.updateStatus(postId, statusId);
-                    System.out.println(post);
-                } catch (EntityNotFoundException e){
-                    System.out.println(e.getMessage());
-                }
-                break;
+    protected void update() {
+        System.out.println(ENTER_ID);
+        Integer postId = scanner.nextInt();
+        scanner.nextLine();
+        System.out.println(ENTER_CONTENT);
+        System.out.println("(if you don't want to update content, leave the field blank)");
+        String content = scanner.nextLine();
+        System.out.println("Enter post status:\n" +
+                "1) ACTIVE\n" +
+                "2) UNDER_REVIEW (default)\n" +
+                "3) DELETED");
+
+        PostStatus status = PostStatus.UNDER_REVIEW;
+        String statusInput = scanner.nextLine();
+        if (!statusInput.trim().isEmpty()){
+            switch (Integer.parseInt(statusInput)){
+                case 1: status = PostStatus.ACTIVE;
+                    break;
+                case 2: status = PostStatus.UNDER_REVIEW;
+                    break;
+                case 3: status = PostStatus.DELETED;
+                    break;
+                default:
+                    System.out.println("Incorrect value");;
+            }
+        }
+        System.out.println("Updating post...");
+        try {
+            Post post = postController.update(postId, content, status);
+            System.out.println(post);
+        } catch (EntityNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    protected void delete(){
+    protected void delete() {
         System.out.println(ENTER_ID);
         Integer id = scanner.nextInt();
         System.out.println("Deleting post...");
         try {
-            if (postController.delete(id)){
+            if (postController.delete(id)) {
                 System.out.println("Post deleted successfully!");
             }
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }
     }
