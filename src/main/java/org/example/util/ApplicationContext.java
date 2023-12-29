@@ -56,10 +56,11 @@ public class ApplicationContext {
     }
 
     public void start(){
-        loop:
-        while (true){
+        boolean exitLoop = false;
+
+        while (!exitLoop) {
             System.out.println(MENU);
-            switch (scanner.nextInt()){
+            switch (scanner.nextInt()) {
                 case 1:
                     writerView.action();
                     break;
@@ -70,7 +71,8 @@ public class ApplicationContext {
                     labelView.action();
                     break;
                 case 4:
-                    break loop;
+                    exitLoop = true;
+                    break;
             }
             System.out.println("\n=================================================\n");
         }

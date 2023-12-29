@@ -31,21 +31,19 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post getById(Integer integer) {
-        Post post;
         try (Session session = HibernateUtil.getSession()) {
-            post = session.get(Post.class, integer);
+            return session.createQuery("FROM Post p LEFT JOIN FETCH p.labels WHERE p.id = :id", Post.class)
+                    .setParameter("id", integer)
+                    .getSingleResult();
         }
-        return post;
     }
 
     @Override
     public List<Post> getAll() {
-        List<Post> posts;
         try (Session session = HibernateUtil.getSession()) {
             Query<Post> query = session.createQuery("FROM Post", Post.class);
-            posts = query.getResultList();
+            return query.getResultList();
         }
-        return posts;
     }
 
     @Override
@@ -61,7 +59,7 @@ public class PostRepositoryImpl implements PostRepository {
                 oldPost.setContent(post.getContent());
             }
             oldPost.setPostStatus(post.getPostStatus());
-            session.update(oldPost);
+            session.merge(oldPost);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {
@@ -80,7 +78,7 @@ public class PostRepositoryImpl implements PostRepository {
             transaction.begin();
             Post post = session.get(Post.class, integer);
             post.setPostStatus(PostStatus.DELETED);
-            session.update(post);
+            session.merge(post);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null && transaction.isActive()) {

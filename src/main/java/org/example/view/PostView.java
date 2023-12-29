@@ -52,7 +52,18 @@ public class PostView extends View {
         System.out.println("Getting post by id...");
         try {
             Post post = postController.getById(id);
-            System.out.println(post);
+            System.out.println("Post{" +
+                    "id=" + id +
+                    ", content='" + post.getContent() + '\'' +
+                    ", created=" + post.getCreated() +
+                    ", updated=" + post.getUpdated() +
+                    ", labels=" + post.getLabels() +
+                    ", author={" +
+                    "id=" + post.getAuthor().getId() +
+                    ", first name=" + post.getAuthor().getFirstName() +
+                    ", last name=" + post.getAuthor().getLastName() +
+                    "}, postStatus=" + post.getPostStatus() +
+                    "}");
         } catch (EntityNotFoundException e) {
             System.out.println(e.getMessage());
         }

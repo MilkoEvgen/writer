@@ -24,7 +24,7 @@ public class Post {
     private LocalDateTime created;
     @Column(name = "updated")
     private LocalDateTime updated;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "post_label",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "label_id"))
@@ -43,12 +43,11 @@ public class Post {
                 ", content='" + content + '\'' +
                 ", created=" + created +
                 ", updated=" + updated +
-                ", labels=" + labels +
                 ", author={" +
                 "id=" + author.getId() +
                 ", first name=" + author.getFirstName() +
                 ", last name=" + author.getLastName() +
                 "}, postStatus=" + postStatus +
-                '}';
+                "}";
     }
 }

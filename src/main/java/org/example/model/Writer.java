@@ -30,7 +30,6 @@ public class Writer {
                         ", content=" + post.getContent() +
                         ", created=" + post.getCreated() +
                         ", updated=" + post.getUpdated() +
-                        ", labels=" + post.getLabels() +
                         ", status=" + post.getPostStatus() + "}")
                 .collect(Collectors.joining("\n"))
                 : "[]";

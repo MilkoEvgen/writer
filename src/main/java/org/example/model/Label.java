@@ -17,7 +17,7 @@ public class Label {
     private Integer id;
     private String name;
     @ManyToMany(mappedBy = "labels", fetch = FetchType.LAZY)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
 
     @Override
     public String toString() {
