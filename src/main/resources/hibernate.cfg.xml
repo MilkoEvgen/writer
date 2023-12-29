@@ -9,7 +9,7 @@
         <property name="hibernate.connection.username">u1317084_milko</property>
         <property name="hibernate.connection.password">u1317084_milko</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-<!--        <property name="hibernate.show_sql">true</property>-->
+        <property name="hibernate.show_sql">true</property>
         <mapping class="org.example.model.Writer" />
         <mapping class="org.example.model.Post" />
         <mapping class="org.example.model.Label" />

@@ -20,9 +20,8 @@ public class PostRepositoryImpl implements PostRepository {
             transaction.begin();
             session.persist(post);
             transaction.commit();
-            post = session.get(Post.class, post.getId());
-        } catch (Exception e){
-            if (transaction != null && transaction.isActive()){
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
                 throw e;
             }
@@ -58,16 +57,14 @@ public class PostRepositoryImpl implements PostRepository {
             transaction.begin();
             oldPost = session.get(Post.class, post.getId());
             oldPost.setUpdated(LocalDateTime.now());
-            if (post.getContent() != null && !post.getContent().isEmpty()){
+            if (post.getContent() != null && !post.getContent().isEmpty()) {
                 oldPost.setContent(post.getContent());
             }
-            if (post.getPostStatus() != null){
-                oldPost.setPostStatus(post.getPostStatus());
-            }
+            oldPost.setPostStatus(post.getPostStatus());
             session.update(oldPost);
-            transaction .commit();
-        } catch (Exception e){
-            if (transaction != null && transaction.isActive()){
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             throw e;
@@ -85,8 +82,8 @@ public class PostRepositoryImpl implements PostRepository {
             post.setPostStatus(PostStatus.DELETED);
             session.update(post);
             transaction.commit();
-        } catch (Exception e){
-            if (transaction != null && transaction.isActive()){
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
                 transaction.rollback();
             }
             return false;
@@ -101,7 +98,7 @@ public class PostRepositoryImpl implements PostRepository {
         }
         try (Session session = HibernateUtil.getSession()) {
             Post post = session.get(Post.class, integer);
-            if (post == null){
+            if (post == null) {
                 return false;
             }
         }
