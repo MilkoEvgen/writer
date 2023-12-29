@@ -1,12 +1,14 @@
 package org.example.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "writers")
 public class Writer {
@@ -19,38 +21,6 @@ public class Writer {
     private String  lastName;
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Post> posts;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
 
     @Override
     public String toString() {
@@ -72,6 +42,4 @@ public class Writer {
                 ", posts=\n" + postsAsString +
                 ')';
     }
-
-
 }

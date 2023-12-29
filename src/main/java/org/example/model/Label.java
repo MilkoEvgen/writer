@@ -1,10 +1,14 @@
 package org.example.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "labels")
 public class Label {
@@ -14,22 +18,6 @@ public class Label {
     private String name;
     @ManyToMany(mappedBy = "labels", fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

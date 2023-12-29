@@ -16,6 +16,7 @@
     <mysql.version>8.2.0</mysql.version>
     <junit.version>5.10.1</junit.version>
     <mockito.version>5.8.0</mockito.version>
+    <lombok.version>1.18.30</lombok.version>
     <flyway_plugin.version>10.4.1</flyway_plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -54,6 +55,14 @@
       <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
 
   </dependencies>
   <build>
